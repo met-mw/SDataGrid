@@ -28,6 +28,8 @@ interface InterfaceDataGrid
 
     public function hasAttributes();
 
+    public function hasCaption();
+
 
     /**
      * @param $caption

@@ -68,37 +68,40 @@ class DataGrid implements InterfaceDataGrid
         $Columns = $this->getColumns();
         ?>
         <table<? if ($this->hasAttributes()) { echo " {$this->getAttributesAsString()}"; } ?>>
-            <caption><?= $this->getCaption() ?></caption>
+            <?
+            if ($this->hasCaption()) {
+                ?><caption><?= $this->getCaption() ?></caption><?
+            }
+            ?>
             <thead>
                 <tr>
-                    <? foreach ($Columns as $Column): ?>
-                        <th<? if ($Column->hasHeaderAttributes()) { echo " {$Column->getHeaderAttributesAsString()}"; } ?>>
-                            <?= $Column->getDisplayName(); ?>
-                        </th>
-                    <? endforeach; ?>
+                    <?
+                    foreach ($Columns as $Column) {
+                        ?><th<? if ($Column->hasHeaderAttributes()) { echo " {$Column->getHeaderAttributesAsString()}"; } ?>><?= $Column->getDisplayName(); ?></th><?
+                    }
+                    ?>
                 </tr>
             </thead>
             <tbody>
             <? $dataSet = $this->getDataSet(); ?>
-
-            <? foreach ($dataSet as $data): ?>
-                <tr>
-                    <? foreach ($Columns as $Column):  ?>
-                        <td<? if ($Column->hasBodyAttributes()) { echo " {$this->getAttributesAsString()}"; } ?>>
-                            <? if ($Column->hasCallback()): ?>
-                                <?
-                                $callback = $Column->getCallback();
-                                $callback($data);
-                                ?>
-                            <? elseif (is_object($data)): ?>
-                                <?= $data->{$Column->getValueName()} ?>
-                            <? else: ?>
-                                <?= $data[$Column->getValueName()] ?>
-                            <? endif; ?>
-                        </td>
-                    <? endforeach; ?>
-                </tr>
-            <? endforeach; ?>
+            <?
+            foreach ($dataSet as $data) {
+                ?><tr><?
+                foreach ($Columns as $Column) {
+                    ?><td<? if ($Column->hasBodyAttributes()) { echo " {$this->getAttributesAsString()}"; } ?>><?
+                    if ($Column->hasCallback()) {
+                        $callback = $Column->getCallback();
+                        $callback($data);
+                    } elseif (is_object($data)) {
+                        echo $data->{$Column->getValueName()};
+                    } else {
+                        echo $data[$Column->getValueName()];
+                    }
+                    ?></td><?
+                }
+                ?></tr><?
+            }
+            ?>
             </tbody>
         </table>
         <?
@@ -146,6 +149,11 @@ class DataGrid implements InterfaceDataGrid
     public function hasAttributes()
     {
         return !empty($this->getAttributes());
+    }
+
+    public function hasCaption()
+    {
+        return !is_null($this->getCaption());
     }
 
 }
