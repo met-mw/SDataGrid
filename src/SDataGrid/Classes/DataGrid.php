@@ -58,7 +58,7 @@ class DataGrid implements InterfaceDataGrid
         return $this;
     }
 
-    public function run()
+    public function render()
     {
         $Columns = $this->getColumns();
         ?>
@@ -97,6 +97,16 @@ class DataGrid implements InterfaceDataGrid
             </tbody>
         </table>
         <?
+    }
+
+    public function get()
+    {
+        ob_start();
+        $this->render();
+        $result = ob_get_contents();
+        ob_end_clean();
+
+        return $result;
     }
 
     public function getAttributes()

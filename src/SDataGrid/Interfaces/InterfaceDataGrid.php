@@ -45,6 +45,8 @@ interface InterfaceDataGrid
      */
     public function setDataSet(array $dataSet);
 
-    public function run();
+    public function render();
+
+    public function get();
 
 }
