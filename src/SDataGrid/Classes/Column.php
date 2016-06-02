@@ -10,6 +10,7 @@ class Column implements InterfaceColumn
     /** @var InterfaceDataGrid */
     protected $DataGrid = null;
 
+    protected $isCounter = false;
     protected $displayName = null;
     protected $valueName = null;
     protected $headerAttributes = [];
@@ -150,4 +151,22 @@ class Column implements InterfaceColumn
     {
         return $this->callback;
     }
+
+    public function isCounter()
+    {
+        return $this->isCounter;
+    }
+
+    public function switchOnCounter()
+    {
+        $this->isCounter = true;
+        return $this;
+    }
+
+    public function switchOffCounter()
+    {
+        $this->isCounter = false;
+        return $this;
+    }
+
 }

@@ -17,6 +17,18 @@ interface InterfaceColumn
     public function hasBodyAttributes();
     public function hasCallback();
 
+    public function isCounter();
+
+    /**
+     * @return InterfaceColumn
+     */
+    public function switchOnCounter();
+
+    /**
+     * @return InterfaceColumn
+     */
+    public function switchOffCounter();
+
     /**
      * @return InterfaceDataGrid
      */

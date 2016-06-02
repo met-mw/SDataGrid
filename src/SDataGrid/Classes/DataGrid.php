@@ -65,6 +65,7 @@ class DataGrid implements InterfaceDataGrid
 
     public function render()
     {
+        $count = 1;
         $Columns = $this->getColumns();
         ?>
         <table<? if ($this->hasAttributes()) { echo " {$this->getAttributesAsString()}"; } ?>>
@@ -89,7 +90,9 @@ class DataGrid implements InterfaceDataGrid
                 ?><tr><?
                 foreach ($Columns as $Column) {
                     ?><td<? if ($Column->hasBodyAttributes()) { echo " {$this->getAttributesAsString()}"; } ?>><?
-                    if ($Column->hasCallback()) {
+                    if ($Column->isCounter()) {
+                        echo $count;
+                    } elseif ($Column->hasCallback()) {
                         $callback = $Column->getCallback();
                         $callback($data);
                     } elseif (is_object($data)) {
@@ -100,6 +103,7 @@ class DataGrid implements InterfaceDataGrid
                     ?></td><?
                 }
                 ?></tr><?
+                $count++;
             }
             ?>
             </tbody>
