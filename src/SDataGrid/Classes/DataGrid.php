@@ -38,7 +38,7 @@ class DataGrid implements InterfaceDataGrid
      */
     public function getColumns()
     {
-        return $this->getColumns();
+        return $this->Columns;
     }
 
     /**
