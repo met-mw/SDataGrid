@@ -1,4 +1,9 @@
 <?php
+namespace SDataGrid\Classes;
+
+use SDataGrid\Interfaces\InterfaceColumn;
+use SDataGrid\Interfaces\InterfaceDataGrid;
+
 class Column implements InterfaceColumn
 {
 

@@ -1,4 +1,6 @@
 <?php
+namespace SDataGrid\Interfaces;
+
 interface InterfaceColumn
 {
 
