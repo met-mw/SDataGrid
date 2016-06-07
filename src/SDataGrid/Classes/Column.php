@@ -15,7 +15,12 @@ class Column implements InterfaceColumn
     protected $valueName = null;
     protected $headerAttributes = [];
     protected $bodyAttributes = [];
-    protected $callback;
+    protected $footerAttributes = [];
+
+    /** @var callable */
+    protected $callback = null;
+    /** @var callable */
+    protected $footerCallback = null;
 
     public function __construct(InterfaceDataGrid $DataGrid = null)
     {
@@ -70,7 +75,7 @@ class Column implements InterfaceColumn
 
     public function hasCallback()
     {
-        return $this->callback != null;
+        return !is_null($this->callback);
     }
 
     /**
@@ -107,7 +112,7 @@ class Column implements InterfaceColumn
      * @param $callback
      * @return InterfaceColumn
      */
-    public function setCallback($callback)
+    public function setCallback(callable $callback)
     {
         $this->callback = $callback;
         return $this;
@@ -169,4 +174,63 @@ class Column implements InterfaceColumn
         return $this;
     }
 
+    /**
+     * @return callable
+     */
+    public function getFooterCallback()
+    {
+        return $this->footerCallback;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFooterAttributes()
+    {
+        return $this->footerAttributes;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFooterAttributesAsString()
+    {
+        return $this->getAttributesAsString($this->getFooterAttributes());
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasFooterAttributes()
+    {
+        return !empty($this->getFooterAttributes());
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasFooterCallback()
+    {
+        return !is_null($this->footerCallback);
+    }
+
+    /**
+     * @param array $footerAttributes
+     * @return InterfaceColumn
+     */
+    public function setFooterAttributes($footerAttributes = [])
+    {
+        $this->footerAttributes = $footerAttributes;
+        return $this;
+    }
+
+    /**
+     * @param callable $callback
+     * @return InterfaceColumn
+     */
+    public function setFooterCallback(callable $callback)
+    {
+        $this->footerCallback = $callback;
+        return $this;
+    }
 }

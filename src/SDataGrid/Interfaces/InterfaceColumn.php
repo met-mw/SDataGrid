@@ -4,19 +4,84 @@ namespace SDataGrid\Interfaces;
 interface InterfaceColumn
 {
 
-    public function getDisplayName();
-    public function getValueName();
+    /**
+     * @return callable
+     */
     public function getCallback();
+
+    /**
+     * @return callable
+     */
+    public function getFooterCallback();
+
+    /**
+     * @return string
+     */
+    public function getDisplayName();
+
+    /**
+     * @return string
+     */
+    public function getValueName();
+
+    /**
+     * @return array
+     */
     public function getHeaderAttributes();
+
+    /**
+     * @return array
+     */
     public function getBodyAttributes();
 
+    /**
+     * @return array
+     */
+    public function getFooterAttributes();
+
+    /**
+     * @return string
+     */
     public function getHeaderAttributesAsString();
+
+    /**
+     * @return string
+     */
     public function getBodyAttributesAsString();
 
+    /**
+     * @return string
+     */
+    public function getFooterAttributesAsString();
+
+    /**
+     * @return bool
+     */
     public function hasHeaderAttributes();
+
+    /**
+     * @return bool
+     */
     public function hasBodyAttributes();
+
+    /**
+     * @return bool
+     */
+    public function hasFooterAttributes();
+
+    /**
+     * @return bool
+     */
     public function hasCallback();
 
+    /**
+     * @return bool
+     */
+    public function hasFooterCallback();
+
+    /**
+     * @return bool
+     */
     public function isCounter();
 
     /**
@@ -59,15 +124,27 @@ interface InterfaceColumn
     public function setBodyAttributes($bodyAttributes = []);
 
     /**
+     * @param array $footerAttributes
+     * @return InterfaceColumn
+     */
+    public function setFooterAttributes($footerAttributes = []);
+
+    /**
      * @param InterfaceDataGrid $DataGrid
      * @return InterfaceColumn
      */
     public function setDataGrid(InterfaceDataGrid $DataGrid);
 
     /**
-     * @param $callback
+     * @param callable $callback
      * @return InterfaceColumn
      */
-    public function setCallback($callback);
+    public function setCallback(callable $callback);
+
+    /**
+     * @param callable $callback
+     * @return InterfaceColumn
+     */
+    public function setFooterCallback(callable $callback);
 
 }
