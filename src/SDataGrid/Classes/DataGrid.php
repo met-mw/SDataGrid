@@ -67,6 +67,7 @@ class DataGrid implements InterfaceDataGrid
     {
         $count = 1;
         $Columns = $this->getColumns();
+        $hasFooter = false;
         ?>
         <table<? if ($this->hasAttributes()) { echo " {$this->getAttributesAsString()}"; } ?>>
             <?
@@ -78,6 +79,9 @@ class DataGrid implements InterfaceDataGrid
                 <tr>
                     <?
                     foreach ($Columns as $Column) {
+                        if ($Column->hasFooterCallback()) {
+                            $hasFooter = true;
+                        }
                         ?><th<? if ($Column->hasHeaderAttributes()) { echo " {$Column->getHeaderAttributesAsString()}"; } ?>><?= $Column->getDisplayName(); ?></th><?
                     }
                     ?>
@@ -89,7 +93,7 @@ class DataGrid implements InterfaceDataGrid
             foreach ($dataSet as $data) {
                 ?><tr><?
                 foreach ($Columns as $Column) {
-                    ?><td<? if ($Column->hasBodyAttributes()) { echo " {$this->getAttributesAsString()}"; } ?>><?
+                    ?><td<? if ($Column->hasBodyAttributes()) { echo " {$Column->getBodyAttributesAsString()}"; } ?>><?
                     if ($Column->isCounter()) {
                         echo $count;
                     } elseif ($Column->hasCallback()) {
@@ -107,6 +111,22 @@ class DataGrid implements InterfaceDataGrid
             }
             ?>
             </tbody>
+            <?
+            if ($hasFooter) {
+                ?><tfoot><?
+                ?><tr><?
+                foreach ($Columns as $Column) {
+                    ?><td<? if ($Column->hasFooterAttributes()) { echo " {$Column->getFooterAttributesAsString()}"; } ?>><?
+                    if ($Column->hasFooterCallback()) {
+                        $footerCallback = $Column->getFooterCallback();
+                        $footerCallback($dataSet);
+                    }
+                    ?></td><?
+                }
+                ?></tr><?
+                ?></tfoot><?
+            }
+            ?>
         </table>
         <?
     }
