@@ -6,3 +6,6 @@
 [![License](https://poser.pugx.org/met_mw/sdatagrid/license)](https://packagist.org/packages/met_mw/sdatagrid)
 # SDataGrid
 Простая библиотека для формирования таблиц
+
+## Лицензия
+SDataGrid пакет с открытым исходным кодом, под лицензией **[MIT](https://opensource.org/licenses/MIT)**
