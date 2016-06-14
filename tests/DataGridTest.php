@@ -36,4 +36,38 @@ class DataGridTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($DataGrid->getColumns()[0] instanceof InterfaceColumn);
     }
 
+    public function testHasMethods()
+    {
+        $DataGrid = new DataGrid([['test_data_row1'], ['test_data_row2']], 'test_caption');
+        $DataGrid->setAttributes(['test_attribute1' => 'test_attribute_data1', 'test_attribute2' => 'test_attribute_data2']);
+
+        $this->assertTrue($DataGrid->hasCaption());
+        $this->assertTrue($DataGrid->hasAttributes());
+    }
+
+    public function testExceptions()
+    {
+        $DataGrid = new DataGrid();
+        $throw = false;
+        try {
+            $DataGrid->setCaption(10);
+        } catch (InvalidArgumentException $e) {
+            $throw = true;
+        }
+        if (!$throw) {
+            $this->fail('Set caption exception is not thrown.');
+        }
+    }
+
+    public function testRender()
+    {
+        $DataGrid = new DataGrid();
+
+        $DOMDocument = new DOMDocument();
+        $DOMDocument->validateOnParse = false;
+        $DOMDocument->loadHTML($DataGrid->get());
+        $ul = $DOMDocument->getElementsByTagName('table')->item(0);
+        $this->assertEquals('table', $ul->localName);
+    }
+
 }
