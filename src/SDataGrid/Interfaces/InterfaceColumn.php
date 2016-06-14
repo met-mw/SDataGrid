@@ -5,12 +5,12 @@ interface InterfaceColumn
 {
 
     /**
-     * @return callable
+     * @return callable(@param int $number, @param array $data)
      */
     public function getCallback();
 
     /**
-     * @return callable
+     * @return callable(@param int $number, @param array $data)
      */
     public function getFooterCallback();
 
@@ -25,17 +25,17 @@ interface InterfaceColumn
     public function getValueName();
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public function getHeaderAttributes();
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public function getBodyAttributes();
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public function getFooterAttributes();
 
@@ -80,54 +80,39 @@ interface InterfaceColumn
     public function hasFooterCallback();
 
     /**
-     * @return bool
-     */
-    public function isCounter();
-
-    /**
-     * @return InterfaceColumn
-     */
-    public function switchOnCounter();
-
-    /**
-     * @return InterfaceColumn
-     */
-    public function switchOffCounter();
-
-    /**
      * @return InterfaceDataGrid
      */
     public function getDataGrid();
 
     /**
-     * @param $displayName
+     * @param string $displayName
      * @return InterfaceColumn
      */
     public function setDisplayName($displayName);
 
     /**
-     * @param $valueName
+     * @param string $valueName
      * @return InterfaceColumn
      */
     public function setValueName($valueName);
 
     /**
-     * @param array $headerAttributes
+     * @param array<string, string> $headerAttributes
      * @return InterfaceColumn
      */
-    public function setHeaderAttributes($headerAttributes = []);
+    public function setHeaderAttributes(array $headerAttributes = []);
 
     /**
-     * @param array $bodyAttributes
+     * @param array<string, string> $bodyAttributes
      * @return InterfaceColumn
      */
-    public function setBodyAttributes($bodyAttributes = []);
+    public function setBodyAttributes(array $bodyAttributes = []);
 
     /**
-     * @param array $footerAttributes
+     * @param array<string, string> $footerAttributes
      * @return InterfaceColumn
      */
-    public function setFooterAttributes($footerAttributes = []);
+    public function setFooterAttributes(array $footerAttributes = []);
 
     /**
      * @param InterfaceDataGrid $DataGrid
@@ -136,13 +121,13 @@ interface InterfaceColumn
     public function setDataGrid(InterfaceDataGrid $DataGrid);
 
     /**
-     * @param callable $callback
+     * @param callable(@param int $number, @param array $data) $callback
      * @return InterfaceColumn
      */
     public function setCallback(callable $callback);
 
     /**
-     * @param callable $callback
+     * @param callable(@param int $number, @param array $data) $callback
      * @return InterfaceColumn
      */
     public function setFooterCallback(callable $callback);

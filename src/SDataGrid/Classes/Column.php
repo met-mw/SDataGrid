@@ -1,6 +1,8 @@
 <?php
 namespace SDataGrid\Classes;
 
+use InvalidArgumentException;
+use ReflectionFunction;
 use SDataGrid\Interfaces\InterfaceColumn;
 use SDataGrid\Interfaces\InterfaceDataGrid;
 
@@ -10,8 +12,7 @@ class Column implements InterfaceColumn
     /** @var InterfaceDataGrid */
     protected $DataGrid = null;
 
-    protected $isCounter = false;
-    protected $displayName = null;
+    protected $displayName = '';
     protected $valueName = null;
     protected $headerAttributes = [];
     protected $bodyAttributes = [];
@@ -22,100 +23,13 @@ class Column implements InterfaceColumn
     /** @var callable */
     protected $footerCallback = null;
 
+    /**
+     * Column constructor.
+     * @param InterfaceDataGrid|null $DataGrid
+     */
     public function __construct(InterfaceDataGrid $DataGrid = null)
     {
         $this->DataGrid = $DataGrid;
-    }
-
-
-    public function getDisplayName()
-    {
-        return $this->displayName;
-    }
-
-    public function getHeaderAttributes()
-    {
-        return $this->headerAttributes;
-    }
-
-    public function getBodyAttributes()
-    {
-        return $this->bodyAttributes;
-    }
-
-    protected function getAttributesAsString(array $attributes)
-    {
-        $preparedAttributes = [];
-        foreach ($attributes as $name => $value) {
-            $preparedAttributes[] = "{$name}=\"{$value}\"";
-        }
-
-        return implode(' ', $preparedAttributes);
-    }
-
-    public function getHeaderAttributesAsString()
-    {
-        return $this->getAttributesAsString($this->getHeaderAttributes());
-    }
-
-    public function getBodyAttributesAsString()
-    {
-        return $this->getAttributesAsString($this->getBodyAttributes());
-    }
-
-    public function hasHeaderAttributes()
-    {
-        return !empty($this->getHeaderAttributes());
-    }
-
-    public function hasBodyAttributes()
-    {
-        return !empty($this->getBodyAttributes());
-    }
-
-    public function hasCallback()
-    {
-        return !is_null($this->callback);
-    }
-
-    /**
-     * @param $displayName
-     * @return InterfaceColumn
-     */
-    public function setDisplayName($displayName)
-    {
-        $this->displayName = $displayName;
-        return $this;
-    }
-
-    /**
-     * @param array $headerAttributes
-     * @return InterfaceColumn
-     */
-    public function setHeaderAttributes($headerAttributes = [])
-    {
-        $this->headerAttributes = $headerAttributes;
-        return $this;
-    }
-
-    /**
-     * @param array $bodyAttributes
-     * @return InterfaceColumn
-     */
-    public function setBodyAttributes($bodyAttributes = [])
-    {
-        $this->bodyAttributes = $bodyAttributes;
-        return $this;
-    }
-
-    /**
-     * @param $callback
-     * @return InterfaceColumn
-     */
-    public function setCallback(callable $callback)
-    {
-        $this->callback = $callback;
-        return $this;
     }
 
     /**
@@ -127,51 +41,73 @@ class Column implements InterfaceColumn
     }
 
     /**
-     * @param InterfaceDataGrid $DataGrid
-     * @return InterfaceColumn
+     * @return string
      */
-    public function setDataGrid(InterfaceDataGrid $DataGrid)
+    public function getDisplayName()
     {
-        $this->DataGrid = $DataGrid;
-        return $this;
+        return $this->displayName;
     }
 
     /**
-     * @param $valueName
-     * @return InterfaceColumn
+     * @return array<string, string>
      */
-    public function setValueName($valueName)
+    public function getHeaderAttributes()
     {
-        $this->valueName = $valueName;
-        return $this;
+        return $this->headerAttributes;
     }
 
+    /**
+     * @return array<string, string>
+     */
+    public function getBodyAttributes()
+    {
+        return $this->bodyAttributes;
+    }
 
+    /**
+     * @param array<string, string> $attributes
+     * @return string
+     */
+    protected function getAttributesAsString(array $attributes)
+    {
+        $preparedAttributes = [];
+        foreach ($attributes as $name => $value) {
+            $preparedAttributes[] = "{$name}=\"{$value}\"";
+        }
+
+        return implode(' ', $preparedAttributes);
+    }
+
+    /**
+     * @return string
+     */
+    public function getHeaderAttributesAsString()
+    {
+        return $this->getAttributesAsString($this->getHeaderAttributes());
+    }
+
+    /**
+     * @return string
+     */
+    public function getBodyAttributesAsString()
+    {
+        return $this->getAttributesAsString($this->getBodyAttributes());
+    }
+
+    /**
+     * @return null
+     */
     public function getValueName()
     {
         return $this->valueName;
     }
 
+    /**
+     * @return callable
+     */
     public function getCallback()
     {
         return $this->callback;
-    }
-
-    public function isCounter()
-    {
-        return $this->isCounter;
-    }
-
-    public function switchOnCounter()
-    {
-        $this->isCounter = true;
-        return $this;
-    }
-
-    public function switchOffCounter()
-    {
-        $this->isCounter = false;
-        return $this;
     }
 
     /**
@@ -183,7 +119,7 @@ class Column implements InterfaceColumn
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public function getFooterAttributes()
     {
@@ -215,10 +151,108 @@ class Column implements InterfaceColumn
     }
 
     /**
-     * @param array $footerAttributes
+     * @return bool
+     */
+    public function hasHeaderAttributes()
+    {
+        return !empty($this->getHeaderAttributes());
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasBodyAttributes()
+    {
+        return !empty($this->getBodyAttributes());
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasCallback()
+    {
+        return !is_null($this->callback);
+    }
+
+    /**
+     * @param string $displayName
      * @return InterfaceColumn
      */
-    public function setFooterAttributes($footerAttributes = [])
+    public function setDisplayName($displayName)
+    {
+        if (!is_string($displayName)) {
+            throw new InvalidArgumentException('Имя колонки должно быть строкой.');
+        }
+
+        $this->displayName = $displayName;
+        return $this;
+    }
+
+    /**
+     * @param array<string, string> $headerAttributes
+     * @return InterfaceColumn
+     */
+    public function setHeaderAttributes(array $headerAttributes = [])
+    {
+        $this->headerAttributes = $headerAttributes;
+        return $this;
+    }
+
+    /**
+     * @param array<string, string> $bodyAttributes
+     * @return InterfaceColumn
+     */
+    public function setBodyAttributes(array $bodyAttributes = [])
+    {
+        $this->bodyAttributes = $bodyAttributes;
+        return $this;
+    }
+
+    /**
+     * @param $callback
+     * @return InterfaceColumn
+     */
+    public function setCallback(callable $callback)
+    {
+        $closure = &$callback;
+        $reflection = new ReflectionFunction($closure);
+        if ($reflection->getNumberOfRequiredParameters() != 2) {
+            throw new InvalidArgumentException('Параметры callback колонки должны быть обязательными.');
+        }
+
+        $this->callback = $callback;
+        return $this;
+    }
+
+    /**
+     * @param InterfaceDataGrid $DataGrid
+     * @return InterfaceColumn
+     */
+    public function setDataGrid(InterfaceDataGrid $DataGrid)
+    {
+        $this->DataGrid = $DataGrid;
+        return $this;
+    }
+
+    /**
+     * @param string $valueName
+     * @return InterfaceColumn
+     */
+    public function setValueName($valueName)
+    {
+        if (!is_string($valueName)) {
+            throw new InvalidArgumentException('Имя поля данных колонки должно быть строкой.');
+        }
+
+        $this->valueName = $valueName;
+        return $this;
+    }
+
+    /**
+     * @param array<string, string> $footerAttributes
+     * @return InterfaceColumn
+     */
+    public function setFooterAttributes(array $footerAttributes = [])
     {
         $this->footerAttributes = $footerAttributes;
         return $this;
@@ -230,7 +264,14 @@ class Column implements InterfaceColumn
      */
     public function setFooterCallback(callable $callback)
     {
+        $closure = &$callback;
+        $reflection = new ReflectionFunction($closure);
+        if ($reflection->getNumberOfRequiredParameters() != 1) {
+            throw new InvalidArgumentException('Параметр footerCallback колонки должен быть обязательным.');
+        }
+
         $this->footerCallback = $callback;
         return $this;
     }
+
 }

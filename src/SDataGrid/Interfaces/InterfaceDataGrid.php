@@ -15,10 +15,19 @@ interface InterfaceDataGrid
      */
     public function getColumns();
 
+    /**
+     * @return array
+     */
     public function getAttributes();
 
+    /**
+     * @return string
+     */
     public function getAttributesAsString();
 
+    /**
+     * @return string
+     */
     public function getCaption();
 
     /**
@@ -26,8 +35,14 @@ interface InterfaceDataGrid
      */
     public function getDataSet();
 
+    /**
+     * @return bool
+     */
     public function hasAttributes();
 
+    /**
+     * @return bool
+     */
     public function hasCaption();
 
 
@@ -41,16 +56,22 @@ interface InterfaceDataGrid
      * @param array $attributes
      * @return InterfaceDataGrid
      */
-    public function setAttributes($attributes = []);
+    public function setAttributes(array $attributes = []);
 
     /**
      * @param array $dataSet
      * @return InterfaceDataGrid
      */
-    public function setDataSet(array $dataSet);
+    public function setDataSet(array $dataSet = []);
 
+    /**
+     * @return void
+     */
     public function render();
 
+    /**
+     * @return string
+     */
     public function get();
 
 }

@@ -1,24 +1,109 @@
 <?php
 namespace SDataGrid\Classes;
 
+use InvalidArgumentException;
 use SDataGrid\Interfaces\InterfaceColumn;
 use SDataGrid\Interfaces\InterfaceDataGrid;
 
 class DataGrid implements InterfaceDataGrid
 {
 
-    protected $caption = null;
+    /** @var string */
+    protected $caption = '';
+    /** @var array */
     protected $attributes = [];
+    /** @var array */
     protected $dataSource = [];
     /** @var InterfaceColumn[] */
     protected $Columns = [];
 
     /**
-     * @param $caption
+     * DataGrid constructor.
+     * @param array $dataSet
+     * @param string $caption
+     */
+    public function __construct(array $dataSet = [], $caption = '')
+    {
+        $this->setDataSet($dataSet)
+            ->setCaption($caption);
+    }
+
+    /**
+     * @param InterfaceColumn $Column
+     * @return InterfaceDataGrid
+     */
+    public function addColumn(InterfaceColumn $Column)
+    {
+        $Column->setDataGrid($this);
+        $this->Columns[] = $Column;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCaption()
+    {
+        return $this->caption;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDataSet()
+    {
+        return $this->dataSource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAttributesAsString()
+    {
+        $preparedAttributes = [];
+        $attributes = $this->getAttributes();
+        foreach ($attributes as $name => $value) {
+            $preparedAttributes[] = "{$name}=\"{$value}\"";
+        }
+
+        return implode(' ', $preparedAttributes);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAttributes()
+    {
+        return !empty($this->getAttributes());
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasCaption()
+    {
+        return !is_null($this->getCaption());
+    }
+
+    /**
+     * @param string $caption
      * @return InterfaceDataGrid
      */
     public function setCaption($caption)
     {
+        if (!is_string($caption)) {
+            throw new InvalidArgumentException('Заголовок таблицы должен быть строкой.');
+        }
+
         $this->caption = $caption;
         return $this;
     }
@@ -27,7 +112,7 @@ class DataGrid implements InterfaceDataGrid
      * @param array $attributes
      * @return InterfaceDataGrid
      */
-    public function setAttributes($attributes = [])
+    public function setAttributes(array $attributes = [])
     {
         $this->attributes = $attributes;
         return $this;
@@ -45,92 +130,74 @@ class DataGrid implements InterfaceDataGrid
      * @param array $dataSet
      * @return InterfaceDataGrid
      */
-    public function setDataSet(array $dataSet)
+    public function setDataSet(array $dataSet = [])
     {
         $this->dataSource = $dataSet;
         return $this;
     }
 
     /**
-     * @param InterfaceColumn $Column
-     * @return InterfaceDataGrid
+     * @return void
      */
-    public function addColumn(InterfaceColumn $Column)
-    {
-        $Column->setDataGrid($this);
-        $this->Columns[] = $Column;
-
-        return $this;
-    }
-
     public function render()
     {
-        $count = 1;
+        $number = 1;
         $Columns = $this->getColumns();
         $hasFooter = false;
-        ?>
-        <table<? if ($this->hasAttributes()) { echo " {$this->getAttributesAsString()}"; } ?>>
-            <?
+        ?><table<?php if ($this->hasAttributes()) { echo " {$this->getAttributesAsString()}"; } ?>><?php
             if ($this->hasCaption()) {
-                ?><caption><?= $this->getCaption() ?></caption><?
+                ?><caption><?php echo $this->getCaption(); ?></caption><?php
             }
-            ?>
-            <thead>
-                <tr>
-                    <?
+            ?><thead><?php
+                ?><tr><?php
                     foreach ($Columns as $Column) {
                         if ($Column->hasFooterCallback()) {
                             $hasFooter = true;
                         }
-                        ?><th<? if ($Column->hasHeaderAttributes()) { echo " {$Column->getHeaderAttributesAsString()}"; } ?>><?= $Column->getDisplayName(); ?></th><?
+                        ?><th<?php if ($Column->hasHeaderAttributes()) { echo " {$Column->getHeaderAttributesAsString()}"; } ?>><?php echo $Column->getDisplayName(); ?></th><?php
                     }
-                    ?>
-                </tr>
-            </thead>
-            <tbody>
-            <? $dataSet = $this->getDataSet(); ?>
-            <?
-            foreach ($dataSet as $data) {
-                ?><tr><?
-                foreach ($Columns as $Column) {
-                    ?><td<? if ($Column->hasBodyAttributes()) { echo " {$Column->getBodyAttributesAsString()}"; } ?>><?
-                    if ($Column->isCounter()) {
-                        echo $count;
-                    } elseif ($Column->hasCallback()) {
-                        $callback = $Column->getCallback();
-                        $callback($data);
-                    } elseif (is_object($data)) {
-                        echo $data->{$Column->getValueName()};
-                    } else {
-                        echo $data[$Column->getValueName()];
+                ?></tr><?php
+            ?></thead><?php
+            ?><tbody><?php
+                $dataSet = $this->getDataSet();
+                foreach ($dataSet as $data) {
+                    ?><tr><?php
+                    foreach ($Columns as $Column) {
+                        ?><td<?php if ($Column->hasBodyAttributes()) { echo " {$Column->getBodyAttributesAsString()}"; } ?>><?php
+                        if ($Column->hasCallback()) {
+                            $callback = $Column->getCallback();
+                            $callback($number, $data);
+                        } elseif (is_object($data)) {
+                            echo $data->{$Column->getValueName()};
+                        } else {
+                            echo $data[$Column->getValueName()];
+                        }
+                        ?></td><?php
                     }
-                    ?></td><?
+                    ?></tr><?php
+                    $number++;
                 }
-                ?></tr><?
-                $count++;
-            }
-            ?>
-            </tbody>
-            <?
+            ?></tbody><?php
             if ($hasFooter) {
-                ?><tfoot><?
-                ?><tr><?
+                ?><tfoot><?php
+                ?><tr><?php
                 foreach ($Columns as $Column) {
-                    ?><td<? if ($Column->hasFooterAttributes()) { echo " {$Column->getFooterAttributesAsString()}"; } ?>><?
+                    ?><td<?php if ($Column->hasFooterAttributes()) { echo " {$Column->getFooterAttributesAsString()}"; } ?>><?php
                     if ($Column->hasFooterCallback()) {
                         $footerCallback = $Column->getFooterCallback();
                         $footerCallback($dataSet);
                     }
-                    ?></td><?
+                    ?></td><?php
                 }
-                ?></tr><?
-                ?></tfoot><?
+                ?></tr><?php
+                ?></tfoot><?php
             }
-            ?>
-        </table>
-        <?
+            ?></table><?php
     }
 
+    /**
+     * @return string
+     */
     public function get()
     {
         ob_start();
@@ -139,45 +206,6 @@ class DataGrid implements InterfaceDataGrid
         ob_end_clean();
 
         return $result;
-    }
-
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    public function getCaption()
-    {
-        return $this->caption;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDataSet()
-    {
-        return $this->dataSource;
-    }
-
-    public function getAttributesAsString()
-    {
-        $preparedAttributes = [];
-        $attributes = $this->getAttributes();
-        foreach ($attributes as $name => $value) {
-            $preparedAttributes[] = "{$name}=\"{$value}\"";
-        }
-
-        return implode(' ', $preparedAttributes);
-    }
-
-    public function hasAttributes()
-    {
-        return !empty($this->getAttributes());
-    }
-
-    public function hasCaption()
-    {
-        return !is_null($this->getCaption());
     }
 
 }
