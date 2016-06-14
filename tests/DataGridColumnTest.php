@@ -75,4 +75,49 @@ class DataGridColumnTest extends PHPUnit_Framework_TestCase
         $footerCallback([]);
     }
 
+    public function testExceptions()
+    {
+        $Column = new Column();
+
+        $throw = false;
+        try {
+            $Column->setDisplayName(10);
+        } catch(InvalidArgumentException $e) {
+            $throw = true;
+        }
+        if (!$throw) {
+            $this->fail('Set display name exception is not thrown.');
+        }
+
+        $throw = false;
+        try {
+            $Column->setValueName(10);
+        } catch(InvalidArgumentException $e) {
+            $throw = true;
+        }
+        if (!$throw) {
+            $this->fail('Set value name exception is not thrown.');
+        }
+
+        $throw = false;
+        try {
+            $Column->setCallback(function () {});
+        } catch(InvalidArgumentException $e) {
+            $throw = true;
+        }
+        if (!$throw) {
+            $this->fail('Set callback exception is not thrown.');
+        }
+
+        $throw = false;
+        try {
+            $Column->setFooterCallback(function () {});
+        } catch(InvalidArgumentException $e) {
+            $throw = true;
+        }
+        if (!$throw) {
+            $this->fail('Set footer callback exception is not thrown.');
+        }
+    }
+
 }
