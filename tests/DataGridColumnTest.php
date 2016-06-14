@@ -48,7 +48,7 @@ class DataGridColumnTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($Column->hasHeaderAttributes());
         $this->assertTrue($Column->hasBodyAttributes());
-        $this->assertTrue($Column->hasFooterCallback());
+        $this->assertTrue($Column->hasFooterAttributes());
         $this->assertTrue($Column->hasCallback());
         $this->assertTrue($Column->hasFooterCallback());
     }
