@@ -9,7 +9,23 @@ class DataGridTest extends PHPUnit_Framework_TestCase
     public function testAddColumn()
     {
         $DataGrid = new DataGrid();
-        $this->assertSame($DataGrid, $DataGrid->addColumn(new Column()));
+        $Column = new Column($DataGrid);
+        $Column->setHeaderAttributes(['test_attribute1' => 'test_data1', 'test_attribute2' => 'test_data2'])
+            ->setBodyAttributes(['test_attribute1' => 'test_data1', 'test_attribute2' => 'test_data2'])
+            ->setFooterAttributes(['test_attribute1' => 'test_data1', 'test_attribute2' => 'test_data2'])
+            ->setCallback(function ($number, $data) {})
+            ->setFooterCallback(function ($data) {})
+            ->setDisplayName('test_column_name')
+            ->setValueName('test_column_value_name');
+
+        $this->assertSame($DataGrid, $DataGrid->addColumn($Column));
+        $this->assertSame($Column, $DataGrid->getColumns()[0]);
+
+        $this->assertTrue($Column->hasHeaderAttributes());
+        $this->assertTrue($Column->hasBodyAttributes());
+        $this->assertTrue($Column->hasFooterCallback());
+        $this->assertTrue($Column->hasCallback());
+        $this->assertTrue($Column->hasFooterCallback());
     }
 
     public function testSettings()
