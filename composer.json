@@ -1,7 +1,7 @@
 {
     "name": "met_mw/sdatagrid",
     "type": "library",
-    "keywords": ["universal", "datagrid", "table generator"],
+    "keywords": ["universal", "datagrid", "table generator", "independent"],
     "license": "MIT",
     "authors": [
         {
