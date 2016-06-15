@@ -5,7 +5,7 @@
 [![Total Downloads](https://poser.pugx.org/met_mw/sdatagrid/downloads)](https://packagist.org/packages/met_mw/sdatagrid)
 [![License](https://poser.pugx.org/met_mw/sdatagrid/license)](https://packagist.org/packages/met_mw/sdatagrid)
 # SDataGrid
-Простая библиотека для формирования таблиц
+Simple independent library to generate tables in web-applications.
 
-## Лицензия
-SDataGrid пакет с открытым исходным кодом, под лицензией **[MIT](https://opensource.org/licenses/MIT)**
+## License
+The met-mw/SDataGrid package is open-sourced software licensed under the **[MIT license](https://opensource.org/licenses/MIT)**
