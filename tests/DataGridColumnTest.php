@@ -1,8 +1,8 @@
 <?php
 
 
-use SDataGrid\Classes\Column;
-use SDataGrid\Classes\DataGrid;
+use SDataGrid\Column;
+use SDataGrid\DataGrid;
 
 class DataGridColumnTest extends PHPUnit_Framework_TestCase
 {

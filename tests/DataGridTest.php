@@ -1,7 +1,7 @@
 <?php
-use SDataGrid\Classes\Column;
-use SDataGrid\Classes\DataGrid;
-use SDataGrid\Interfaces\InterfaceColumn;
+use SDataGrid\Column;
+use SDataGrid\ColumnInterface;
+use SDataGrid\DataGrid;
 
 class DataGridTest extends PHPUnit_Framework_TestCase
 {
@@ -52,7 +52,7 @@ class DataGridTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['test_attribute1' => 'test_attribute_data1', 'test_attribute2' => 'test_attribute_data2'], $DataGrid->getAttributes());
         $this->assertEquals('test_attribute1="test_attribute_data1" test_attribute2="test_attribute_data2"', $DataGrid->getAttributesAsString());
         $this->assertEquals(3, sizeof($DataGrid->getColumns()));
-        $this->assertTrue($DataGrid->getColumns()[0] instanceof InterfaceColumn);
+        $this->assertTrue($DataGrid->getColumns()[0] instanceof ColumnInterface);
     }
 
     public function testHasMethods()
