@@ -1,7 +1,7 @@
 <?php
-namespace SDataGrid\Interfaces;
+namespace SDataGrid;
 
-interface InterfaceColumn
+interface ColumnInterface
 {
 
     /**
@@ -25,17 +25,17 @@ interface InterfaceColumn
     public function getValueName();
 
     /**
-     * @return array<string, string>
+     * @return <string, string>[]
      */
     public function getHeaderAttributes();
 
     /**
-     * @return array<string, string>
+     * @return <string, string>[]
      */
     public function getBodyAttributes();
 
     /**
-     * @return array<string, string>
+     * @return <string, string>[]
      */
     public function getFooterAttributes();
 
@@ -80,55 +80,55 @@ interface InterfaceColumn
     public function hasFooterCallback();
 
     /**
-     * @return InterfaceDataGrid
+     * @return DataGridInterface
      */
     public function getDataGrid();
 
     /**
      * @param string $displayName
-     * @return InterfaceColumn
+     * @return ColumnInterface
      */
     public function setDisplayName($displayName);
 
     /**
      * @param string $valueName
-     * @return InterfaceColumn
+     * @return ColumnInterface
      */
     public function setValueName($valueName);
 
     /**
-     * @param array<string, string> $headerAttributes
-     * @return InterfaceColumn
+     * @param <string, string>[] $headerAttributes
+     * @return ColumnInterface
      */
     public function setHeaderAttributes(array $headerAttributes = []);
 
     /**
-     * @param array<string, string> $bodyAttributes
-     * @return InterfaceColumn
+     * @param <string, string>[] $bodyAttributes
+     * @return ColumnInterface
      */
     public function setBodyAttributes(array $bodyAttributes = []);
 
     /**
-     * @param array<string, string> $footerAttributes
-     * @return InterfaceColumn
+     * @param <string, string>[] $footerAttributes
+     * @return ColumnInterface
      */
     public function setFooterAttributes(array $footerAttributes = []);
 
     /**
-     * @param InterfaceDataGrid $DataGrid
-     * @return InterfaceColumn
+     * @param DataGridInterface $DataGrid
+     * @return ColumnInterface
      */
-    public function setDataGrid(InterfaceDataGrid $DataGrid);
+    public function setDataGrid(DataGridInterface $DataGrid);
 
     /**
      * @param callable(@param int $number, @param array $data) $callback
-     * @return InterfaceColumn
+     * @return ColumnInterface
      */
     public function setCallback(callable $callback);
 
     /**
      * @param callable(@param int $number, @param array $data) $callback
-     * @return InterfaceColumn
+     * @return ColumnInterface
      */
     public function setFooterCallback(callable $callback);
 
