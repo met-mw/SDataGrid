@@ -1,11 +1,9 @@
 <?php
-namespace SDataGrid\Classes;
+namespace SDataGrid;
 
 use InvalidArgumentException;
-use SDataGrid\Interfaces\InterfaceColumn;
-use SDataGrid\Interfaces\InterfaceDataGrid;
 
-class DataGrid implements InterfaceDataGrid
+class DataGrid implements DataGridInterface
 {
 
     /** @var string */
@@ -14,7 +12,7 @@ class DataGrid implements InterfaceDataGrid
     protected $attributes = [];
     /** @var array */
     protected $dataSource = [];
-    /** @var InterfaceColumn[] */
+    /** @var ColumnInterface[] */
     protected $Columns = [];
 
     /**
@@ -29,10 +27,10 @@ class DataGrid implements InterfaceDataGrid
     }
 
     /**
-     * @param InterfaceColumn $Column
-     * @return InterfaceDataGrid
+     * @param ColumnInterface $Column
+     * @return DataGridInterface
      */
-    public function addColumn(InterfaceColumn $Column)
+    public function addColumn(ColumnInterface $Column)
     {
         $Column->setDataGrid($this);
         $this->Columns[] = $Column;
@@ -96,12 +94,12 @@ class DataGrid implements InterfaceDataGrid
 
     /**
      * @param string $caption
-     * @return InterfaceDataGrid
+     * @return DataGridInterface
      */
     public function setCaption($caption)
     {
         if (!is_string($caption)) {
-            throw new InvalidArgumentException('Заголовок таблицы должен быть строкой.');
+            throw new InvalidArgumentException('Table caption must be a string.');
         }
 
         $this->caption = $caption;
@@ -110,7 +108,7 @@ class DataGrid implements InterfaceDataGrid
 
     /**
      * @param array $attributes
-     * @return InterfaceDataGrid
+     * @return DataGridInterface
      */
     public function setAttributes(array $attributes = [])
     {
@@ -119,7 +117,7 @@ class DataGrid implements InterfaceDataGrid
     }
 
     /**
-     * @return InterfaceColumn[]
+     * @return ColumnInterface[]
      */
     public function getColumns()
     {
@@ -128,7 +126,7 @@ class DataGrid implements InterfaceDataGrid
 
     /**
      * @param array $dataSet
-     * @return InterfaceDataGrid
+     * @return DataGridInterface
      */
     public function setDataSet(array $dataSet = [])
     {

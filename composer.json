@@ -9,8 +9,6 @@
             "email": "met-mw@rambler.ru"
         }
     ],
-    "version": "1.0.0",
-    "minimum-stability": "stable",
     "repositories": [],
     "require": {
         "php": ">=5.6.0"

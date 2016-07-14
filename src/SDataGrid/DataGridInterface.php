@@ -1,17 +1,17 @@
 <?php
-namespace SDataGrid\Interfaces;
+namespace SDataGrid;
 
-interface InterfaceDataGrid
+interface DataGridInterface
 {
 
     /**
-     * @param InterfaceColumn $Column
-     * @return InterfaceDataGrid
+     * @param ColumnInterface $Column
+     * @return DataGridInterface
      */
-    public function addColumn(InterfaceColumn $Column);
+    public function addColumn(ColumnInterface $Column);
 
     /**
-     * @return InterfaceColumn[]
+     * @return ColumnInterface[]
      */
     public function getColumns();
 
@@ -48,19 +48,19 @@ interface InterfaceDataGrid
 
     /**
      * @param $caption
-     * @return InterfaceDataGrid
+     * @return DataGridInterface
      */
     public function setCaption($caption);
 
     /**
      * @param array $attributes
-     * @return InterfaceDataGrid
+     * @return DataGridInterface
      */
     public function setAttributes(array $attributes = []);
 
     /**
      * @param array $dataSet
-     * @return InterfaceDataGrid
+     * @return DataGridInterface
      */
     public function setDataSet(array $dataSet = []);
 
