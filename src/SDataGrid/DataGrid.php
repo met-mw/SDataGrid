@@ -139,58 +139,16 @@ class DataGrid implements DataGridInterface
      */
     public function render()
     {
-        $number = 1;
-        $Columns = $this->getColumns();
-        $hasFooter = false;
         ?><table<?php if ($this->hasAttributes()) { echo " {$this->getAttributesAsString()}"; } ?>><?php
             if ($this->hasCaption()) {
                 ?><caption><?php echo $this->getCaption(); ?></caption><?php
             }
-            ?><thead><?php
-                ?><tr><?php
-                    foreach ($Columns as $Column) {
-                        if ($Column->hasFooterCallback()) {
-                            $hasFooter = true;
-                        }
-                        ?><th<?php if ($Column->hasHeaderAttributes()) { echo " {$Column->getHeaderAttributesAsString()}"; } ?>><?php echo $Column->getDisplayName(); ?></th><?php
-                    }
-                ?></tr><?php
-            ?></thead><?php
-            ?><tbody><?php
-                $dataSet = $this->getDataSet();
-                foreach ($dataSet as $data) {
-                    ?><tr><?php
-                    foreach ($Columns as $Column) {
-                        ?><td<?php if ($Column->hasBodyAttributes()) { echo " {$Column->getBodyAttributesAsString()}"; } ?>><?php
-                        if ($Column->hasCallback()) {
-                            $callback = $Column->getCallback();
-                            $callback($number, $data);
-                        } elseif (is_object($data)) {
-                            echo $data->{$Column->getValueName()};
-                        } else {
-                            echo $data[$Column->getValueName()];
-                        }
-                        ?></td><?php
-                    }
-                    ?></tr><?php
-                    $number++;
-                }
-            ?></tbody><?php
-            if ($hasFooter) {
-                ?><tfoot><?php
-                ?><tr><?php
-                foreach ($Columns as $Column) {
-                    ?><td<?php if ($Column->hasFooterAttributes()) { echo " {$Column->getFooterAttributesAsString()}"; } ?>><?php
-                    if ($Column->hasFooterCallback()) {
-                        $footerCallback = $Column->getFooterCallback();
-                        $footerCallback($dataSet);
-                    }
-                    ?></td><?php
-                }
-                ?></tr><?php
-                ?></tfoot><?php
+            $this->renderHead();
+            $this->renderBody();
+            if ($this->hasFooter()) {
+                $this->renderFooter();
             }
-            ?></table><?php
+        ?></table><?php
     }
 
     /**
@@ -204,6 +162,72 @@ class DataGrid implements DataGridInterface
         ob_end_clean();
 
         return $result;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function hasFooter()
+    {
+        foreach ($this->getColumns() as $Column) {
+            if ($Column->hasFooterCallback()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function renderHead()
+    {
+        ?><thead><?php
+        ?><tr><?php
+        foreach ($this->getColumns() as $Column) {
+            ?><th<?php if ($Column->hasHeaderAttributes()) { echo " {$Column->getHeaderAttributesAsString()}"; } ?>><?php echo $Column->getDisplayName(); ?></th><?php
+        }
+        ?></tr><?php
+        ?></thead><?php
+    }
+
+    protected function renderBody()
+    {
+        $number = 1;
+        ?><tbody><?php
+        $dataSet = $this->getDataSet();
+        foreach ($dataSet as $data) {
+            ?><tr><?php
+            foreach ($this->getColumns() as $Column) {
+                ?><td<?php if ($Column->hasBodyAttributes()) { echo " {$Column->getBodyAttributesAsString()}"; } ?>><?php
+                if ($Column->hasCallback()) {
+                    $callback = $Column->getCallback();
+                    $callback($number, $data);
+                } elseif (is_object($data)) {
+                    echo $data->{$Column->getValueName()};
+                } else {
+                    echo $data[$Column->getValueName()];
+                }
+                ?></td><?php
+            }
+            ?></tr><?php
+            $number++;
+        }
+        ?></tbody><?php
+    }
+
+    protected function renderFooter()
+    {
+        ?><tfoot><?php
+        ?><tr><?php
+        foreach ($this->getColumns() as $Column) {
+            ?><td<?php if ($Column->hasFooterAttributes()) { echo " {$Column->getFooterAttributesAsString()}"; } ?>><?php
+            if ($Column->hasFooterCallback()) {
+                $footerCallback = $Column->getFooterCallback();
+                $footerCallback($this->getDataSet());
+            }
+            ?></td><?php
+        }
+        ?></tr><?php
+        ?></tfoot><?php
     }
 
 }
